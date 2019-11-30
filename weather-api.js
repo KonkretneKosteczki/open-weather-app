@@ -19,6 +19,7 @@ async function saveWeatherConditions() {
     const timestamp = parseTimestamp(new Date().getTime());
     const reports = await config.weatherCitiesToCheck.reduce(async (allReportsPromise, city) => {
         const allReports = await allReportsPromise;
+        console.log("Querying city:", city);
         weather.setCity(city);
 
         const report = await new Promise((resolve, reject) => {
@@ -27,6 +28,8 @@ async function saveWeatherConditions() {
                 resolve(weatherInfo);
             });
         }).catch(err => console.error(err));
+        if (!report) return allReports;
+
         const parsedReport = parseReport(report, timestamp, city);
         console.log(JSON.stringify(parsedReport));
         allReports.push(parsedReport);
@@ -39,6 +42,7 @@ async function saveWeatherConditions() {
 }
 
 function parseReport(report, date, city) {
+    console.log(JSON.stringify(report));
     const {main: {temp: temperature, humidity, pressure}, wind: {speed: wind_speed, deg: wind_direction}, rain: {"3h": precipitation} = {"3h": 0}} = report;
     return {date, temperature, pressure, humidity, precipitation, wind_speed, wind_direction, city}
 }
