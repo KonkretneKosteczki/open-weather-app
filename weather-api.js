@@ -53,4 +53,7 @@ function parseTimestamp(timestamp) {
     return Math.round(timestamp / millisecondsIn12Hours) * millisecondsIn12Hours
 }
 
-module.exports = () => new CronJob(config.weatherCheckingCronPattern, saveWeatherConditions, null, true);
+module.exports = {
+    saveWeatherConditions,
+    activateCronJob: () => new CronJob(config.weatherCheckingCronPattern, saveWeatherConditions, null, true)
+};

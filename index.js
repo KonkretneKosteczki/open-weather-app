@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const activateCronJob = require("./weather-api");
+const {activateCronJob} = require("./weather-api");
 const config = require("./config");
 
 app.use(express.static(__dirname + "/public"));
