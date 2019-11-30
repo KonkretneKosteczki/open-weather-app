@@ -1,5 +1,5 @@
 const {MongoClient} = require("mongodb");
-const {databaseURI} = require("./config");
+const config = require("./config");
 
 let con = null;
 
@@ -10,7 +10,7 @@ function getCollection(client, col) {
 async function ensureConnection() {
     if (!con || !(await con).db().serverConfig.isConnected()) {
         console.log("(Re)Establishing connection to database.");
-        con = MongoClient.connect(databaseURI, {useNewUrlParser: true, autoReconnect: false,  useUnifiedTopology: true })
+        con = MongoClient.connect(config.databaseURI, {useNewUrlParser: true, autoReconnect: false,  useUnifiedTopology: true })
             .then(client => {
                 console.log("Database connected");
                 return client;
