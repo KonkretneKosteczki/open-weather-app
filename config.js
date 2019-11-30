@@ -3,5 +3,5 @@ module.exports = {
     databaseURI: process.env.MONGODB_URI || "mongodb://localhost:27017/weather-data",
     weatherCheckingCronPattern: "0 0 */12 * * *", // 0s, 0m, 0/12h
     weatherCitiesToCheck: ["Warszawa", "Szczecin", "Lodz", "Wroclaw", "Gdansk", "Krakow", "Suwalki", "Rzeszow"],
-    weatherApiKey: process.env.API_KEY
+    weatherApiKey: process.env.OPENWEATHERAPI_KEY
 };
