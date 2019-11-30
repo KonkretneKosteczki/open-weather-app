@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <style>
+        th, td, p, input {
+            font: 14px Verdana;
+        }
+
+        table, th, td {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+
+        th {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        fetch("/api/dbSize")
+            .then(res => res.json())
+            .then(({days}) => document.getElementById("days").max = days);
+
+        function createTableFromJSON(json, divContainer) {
+            // EXTRACT VALUE FOR HTML HEADER.
+            // ('Book ID', 'Book Name', 'Category' and 'Price')
+            const columns = ["properties", ...json.map(({city, country}) => city || country)];
+            const table = document.createElement("table");
+            const tr = table.insertRow(-1);
+
+            columns.forEach(label => {
+                const th = document.createElement("th");
+                th.innerHTML = label;
+                tr.appendChild(th);
+            });
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            const properties = Object.keys(json[0]).filter(labels => labels !== "city");
+
+            properties.forEach(key => {
+                const tr = table.insertRow(-1);
+                const tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = key;
+
+                json.map(values => {
+                    const tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = (Math.round(values[key] * 100) / 100).toString();
+                })
+            });
+
+            divContainer.appendChild(table);
+        }
+
+        function createTable() {
+            const divContainer = document.getElementById("showData");
+            divContainer.innerHTML = "";
+            return getData().then(data => createTableFromJSON(data, divContainer));
+        }
+
+        async function getData() {
+            const days = document.getElementById("days").value;
+            const cities = await fetch(`/api/cities?d=${days}`).then(res => res.json());
+
+            const data = [];
+            for (const city of cities) {
+                data.push(await fetch(`/api/average?d=${days}&c=${city}`)
+                    .then(res => res.json())
+                    .then(({average}) => ({...average, city}))
+                );
+            }
+
+            data.push(await fetch(`/api/poland?d=${days}`)
+                .then(res => res.json())
+                .then(({average}) => ({...average, country: "Poland"}))
+            );
+
+            return data;
+        }
+    </script>
+</head>
+<body>
+<label>
+    Days <input id="days" type="number" min="1" step="1" value="1"/>
+</label>
+<button onclick="createTable()">Create Table</button>
+<p id="showData"></p>
+</body>
+</html>
