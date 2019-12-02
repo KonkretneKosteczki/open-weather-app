@@ -35,11 +35,11 @@ function getAverage({city, property, days}) {
 
 }
 
-router.get("/cities", (req, res)=>{
+router.post("/cities", (req, res)=>{
     res.json(config.weatherCitiesToCheck)
 });
 
-router.get("/dbSize", (req, res) => {
+router.post("/dbSize", (req, res) => {
     function daysPassed(timestamp) {
         const current = new Date();
         const previous = new Date(timestamp);
@@ -56,7 +56,7 @@ router.get("/dbSize", (req, res) => {
         .catch(err => res.status(502).json({err}))
 });
 
-router.get("/average", (req, res) => {
+router.post("/average", (req, res) => {
     const {c: city, p: property = "all", d: days = 1} = req.query;
 
     if (!city)
@@ -69,7 +69,7 @@ router.get("/average", (req, res) => {
         .then(average => res.json(average));
 });
 
-router.get("/poland", (req, res) => {
+router.post("/poland", (req, res) => {
     const {p: property = "all", d: days = 1} = req.query;
     return getAverage({property, days})
         .then(average => res.json(average));
