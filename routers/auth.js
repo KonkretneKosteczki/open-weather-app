@@ -46,6 +46,4 @@ router.get("/logout", (req, res) => {
     res.redirect("/login");
 });
 
-router.use(require("connect-ensure-login").ensureLoggedIn());
-
 module.exports = router;
