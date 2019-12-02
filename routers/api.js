@@ -48,7 +48,7 @@ router.post("/dbSize", (req, res) => {
 
     return database
         .collection("reports")
-        .readEntryList({city: config.weatherCitiesToCheck[0], limit: 1, sort: "date", sortOrder: -1})
+        .readEntryList({city: config.weatherCitiesToCheck[0], limit: 1, sort: "date", sortOrder: 1})
         .then(([data]) => {
             if (data) return res.json({days: daysPassed(data.date)});
             else return res.json({days: 0})
