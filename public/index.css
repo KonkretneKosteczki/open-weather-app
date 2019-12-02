@@ -3,12 +3,20 @@ th, td, p, input {
 }
 
 table, th, td {
-    border: solid 1px #DDD;
+    border: solid 1px;
     border-collapse: collapse;
     padding: 2px 3px;
     text-align: center;
 }
 
+tr > td:last-child, tr > th:last-child {
+    background: #BFD5ED;
+}
+
 th {
     font-weight: bold;
+}
+
+th:first-child {
+    background-image: linear-gradient(to bottom left, transparent calc(50% - 1px), black, transparent calc(50% + 1px));
 }

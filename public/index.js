@@ -1,19 +1,31 @@
-function checkStatus(res) {
-    if (!res.ok) throw "Error requesting data from api";
-    return res;
-}
-
 const options = {method: "POST"};
+
 fetch("/api/dbSize", options)
     .then(checkStatus)
     .then(res => res.json())
     .then(({days}) => document.getElementById("days").max = days)
     .catch(console.error);
 
+function formatKeys(key){
+    return {
+        temperature: "temperature<br>[Celsius dg]",
+        pressure: "pressure<br>[hPa]",
+        humidity: "humidity<br>[%]",
+        precipitation: "precipitation<br>[mm]",
+        wind_speed: "wind speed<br>[m/s]",
+        wind_direction: "wind direction<br>[dg]",
+    }[key] || key;
+}
+
+function checkStatus(res) {
+    if (!res.ok) throw "Error requesting data from api";
+    return res;
+}
+
 function createTableFromJSON(json, divContainer) {
     // EXTRACT VALUE FOR HTML HEADER.
     // ('Book ID', 'Book Name', 'Category' and 'Price')
-    const columns = ["properties", ...json.map(({city, country}) => city || country)];
+    const columns = ["", ...json.map(({city, country}) => city || country)];
     const table = document.createElement("table");
     const tr = table.insertRow(-1);
 
@@ -29,7 +41,7 @@ function createTableFromJSON(json, divContainer) {
     properties.forEach(key => {
         const tr = table.insertRow(-1);
         const tabCell = tr.insertCell(-1);
-        tabCell.innerHTML = key;
+        tabCell.innerHTML = formatKeys(key);
 
         json.map(values => {
             const tabCell = tr.insertCell(-1);
